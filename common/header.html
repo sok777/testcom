@@ -220,57 +220,60 @@
 <! -- to make a reply from link -->
 <script type="text/discourse-plugin" version="0.4">
 document.addEventListener('DOMContentLoaded', function () {
-function removeLinksIfClosed() {
+// Debug helper to log if removal occurs.
+  function removeLinksIfClosed() {
     const topic = Discourse.__container__.lookup('controller:topic').get('model');
     const fancyTitle = document.querySelector('.fancy-title');
-    if (topic && topic.category_id === 17 && fancyTitle &&
-        fancyTitle.textContent.toLowerCase().includes("closed")) {
-      document.querySelectorAll('.topic-body a').forEach(function(link) {
-        link.removeAttribute('href');
-      });
+    if (topic && topic.category_id === 17 && fancyTitle) {
+      console.log("Fancy title detected:", fancyTitle.textContent);
+      if (fancyTitle.textContent.toLowerCase().includes("closed")) {
+        document.querySelectorAll('.topic-body a').forEach(function(link) {
+          if (link.hasAttribute('href')) {
+            console.log("Removing href from:", link);
+            link.removeAttribute('href');
+          }
+        });
+      }
     }
   }
 
-  // Run on initial load
+  // Run removal immediately on DOMContentLoaded.
   removeLinksIfClosed();
 
-  // Declare our MutationObserver variable in a scope so we can reuse it
-  let titleObserver;
-
-  // Function to attach a MutationObserver to .fancy-title
-  function attachTitleObserver() {
-    const newFancyTitle = document.querySelector('.fancy-title');
-    if (newFancyTitle) {
-      // Disconnect existing observer if there is one
-      if (titleObserver) {
-        titleObserver.disconnect();
-      }
-      titleObserver = new MutationObserver(removeLinksIfClosed);
-      titleObserver.observe(newFancyTitle, {
-        childList: true,
-        subtree: true,
-        characterData: true
+  // Observer for the topic-body, which may change during SPA navigation.
+  let topicBodyObserver;
+  function attachTopicBodyObserver() {
+    const topicBody = document.querySelector('.topic-body');
+    if (topicBody) {
+      // Disconnect any previous observer to avoid duplicate triggers.
+      if (topicBodyObserver) topicBodyObserver.disconnect();
+      topicBodyObserver = new MutationObserver(function(mutations) {
+        // Any change in the topic body triggers removal attempt.
+        mutations.forEach(function(mutation) {
+          removeLinksIfClosed();
+        });
       });
+      topicBodyObserver.observe(topicBody, { childList: true, subtree: true });
     }
   }
 
-  // Use Discourse’s event system if available.
+  // Attach observer initially if .topic-body exists.
+  attachTopicBodyObserver();
+
+  // Use Discourse's event system (page:changed) to re-run our logic when page content updates.
+  // Note: In some versions of Discourse, the event is available as DiscourseEvent.on
+  function onPageChanged() {
+    // Add a delay so that all dynamic content has finished rendering.
+    setTimeout(function () {
+      removeLinksIfClosed();
+      attachTopicBodyObserver();
+    }, 300); // Adjust delay if needed (tested up to 1000ms, 300ms is a starting point)
+  }
+
   if (typeof DiscourseEvent !== 'undefined' && DiscourseEvent.on) {
-    DiscourseEvent.on('page:changed', function () {
-      // Delay execution so the new topic DOM is fully loaded
-      setTimeout(function () {
-        removeLinksIfClosed();
-        attachTitleObserver();
-      }, 1000); // Adjust the delay as needed
-    });
+    DiscourseEvent.on('page:changed', onPageChanged);
   } else {
-    // Fallback: listen for a page:changed event on the document if DiscourseEvent isn't available
-    document.addEventListener('page:changed', function () {
-      setTimeout(function () {
-        removeLinksIfClosed();
-        attachTitleObserver();
-      }, 300);
-    });
+    document.addEventListener('page:changed', onPageChanged);
   }
 	
 // ribbot	
