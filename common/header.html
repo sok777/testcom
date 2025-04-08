@@ -654,29 +654,30 @@ function observeShowBadgeDetails() {
   
   if (showBadgeDetails) {
     document.querySelectorAll('div.badges-granted a.post-link').forEach(function(link) {
-	  link.addEventListener('click', handlePostLinkClick);
-	});
+      link.addEventListener('click', handlePostLinkClick);
+    });
   } else {
     var observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         var addedNodes = mutation.addedNodes;
         for (var i = 0; i < addedNodes.length; i++) {
           if (addedNodes[i].classList && addedNodes[i].classList.contains('show-badge-details')) {
+            // Use vanilla JS here instead of jQuery:
             document.querySelectorAll('div.badges-granted a.post-link').forEach(function(link) {
-		  link.addEventListener('click', handlePostLinkClick);
-		});
+              link.addEventListener('click', handlePostLinkClick);
+            });
             observer.disconnect();
             break;
           }
         }
       });
     });
-
     observer.observe(document.body, { childList: true, subtree: true });
   }
 }
 
 observeShowBadgeDetails();
+	
 function containsInsensitive(element, searchText) {
   return element.textContent.toUpperCase().includes(searchText.toUpperCase());
 }
