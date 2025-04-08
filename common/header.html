@@ -1,4 +1,3 @@
-<!-- Remove topic list header -->
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap');
 	
@@ -217,9 +216,9 @@
 }
 	</style>
 
-<! -- to make a reply from link -->
 <script type="text/discourse-plugin" version="0.4">
 document.addEventListener('DOMContentLoaded', function () {
+	  // close tester calls
 function isTopicClosed() {
     const topic = Discourse.__container__.lookup('controller:topic').get('model');
     const fancyTitle = document.querySelector('.fancy-title');
@@ -240,7 +239,6 @@ function isTopicClosed() {
     }
   }
   
-  // Run immediately on DOMContentLoaded in case the content is already rendered.
   removeHrefIfNeeded();
   
   // Set up a persistent observer on document.body so that
@@ -259,13 +257,13 @@ function isTopicClosed() {
     attributeFilter: ['href']  // watch for changes to href attributes
   });
   
-  // Optionally, disconnect the observer after 30 seconds (adjust if needed)
   setTimeout(function() {
     bodyObserver.disconnect();
     console.log("Persistent observer disconnected after 30 seconds.");
-  }, 30000);
+  }, 10000);
+	// close tester calls - end
 	
-// ribbot	
+// ribbot postcard	
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has('payload')) {
@@ -328,11 +326,70 @@ function isTopicClosed() {
         console.error("Error parsing payload:", error);
       }
     }
+// ribbot postcard end
+
+// starting the alert for self-promo
+		  let alertShown = false; // Track whether the alert has been shown
+	
+    const waitForComposer = setInterval(() => {
+        const tagsContainer = document.querySelector(".tags-input");
+        if (tagsContainer) {
+            clearInterval(waitForComposer); // Stop checking once the composer is loaded
+
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    // Check for newly added tags
+                    const selectedTags = Array.from(document.querySelectorAll(".tags-input .formatted-selection"));
+                    if (!alertShown && selectedTags.some(tag => tag.innerText.trim() === "self-promo")) {
+                        alert("Reminder: You can only post one self-promo topic every 7 days. Please check if you've already posted 🙏");
+                        alertShown = true; // Prevent further alerts
+                    }
+                });
+            });
+
+            // Observe changes in the tags container
+            observer.observe(tagsContainer, { childList: true, subtree: true });
+        }
+    }, 100); // Check every 100ms
+
+// Optional: Stop trying after 10 seconds to avoid infinite loop
+    setTimeout(() => clearInterval(waitForComposer), 10000);
+
+//end self-promo alert code
+		
+    // Function to safely get the value of a CSS variable
+    function getCssVariableValue(variableName) {
+        return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+    }
+
+// Retrieve the --scheme-type variable
+    const schemeType = getCssVariableValue('--scheme-type');
+
+// Only proceed if --scheme-type is set to 'dark' - fix Ribblr+ badges on user force dark vs prefers
+    if (schemeType === 'dark') {
+        const styleElement = document.createElement('style');
+        styleElement.type = 'text/css';
+        styleElement.innerHTML = `
+            .group--Ribblr-Plus-Gold:after, 
+            .group-Ribblr-Plus-Gold .name-username-wrapper:after, 
+            .group-Ribblr-Plus-Gold .user-profile-names__primary:after {
+                background-image: url('https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/GoldDark.png')!important;
+            }
+            
+            .group--Ribblr-Plus-Platinum:after, 
+            .group--Ribblr-Plus-Platinum .name-username-wrapper:after, 
+            .group--Ribblr-Plus-Platinum .user-profile-names__primary:after {
+                background-image: url('https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/PlatinumDark.png')!important;
+            }
+        `;
+        document.head.appendChild(styleElement);
+    }
 
   });
+	// loadcontent dom end
 </script>
 
-<!-- User Profile Link -->
+<!-- Adding shop link if user is a designer in profile -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/site-link'>
   {{#if this.model.website}}
     {{#unless (eq this.model.website "https://ribblr.com")}}
@@ -347,7 +404,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
-<!-- User Card Link -->
+<!-- User Card Link - Adding shop link if user is a designer -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/site-link'>
   {{#if this.user.website}}
     {{#unless (eq this.user.website "https://ribblr.com")}}
@@ -362,6 +419,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
+<!-- User add makes link in profile -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/makes-link'>
   {{#if this.model.username}}
     <div class="public-user-fields">
@@ -374,6 +432,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
+<!-- User add makes link in card -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/makes-link'>
   {{#if this.user.username}}
     <div class="public-user-fields">
@@ -386,6 +445,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
+<!-- User add stash link in profile -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/stash-link'>
   {{#if this.model.username}}
     <div class="public-user-fields">
@@ -398,6 +458,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
+<!-- User add stash link in card -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/stash-link'>
   {{#if this.user.username}}
     <div class="public-user-fields">
@@ -413,6 +474,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
+<!-- User add wishlist link in profile -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/wishlist-link'>
   {{#if this.model.username}}
     <div class="public-user-fields">
@@ -425,6 +487,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
+<!-- User add wishlist link in card -->
 <script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/wishlist-link'>
   {{#if this.user.username}}
     <div class="public-user-fields">
@@ -437,8 +500,7 @@ function isTopicClosed() {
   {{/if}}
 </script>
 
-
-
+<!-- Add admin to body -->
 <script type="text/discourse-plugin" version="0.8.23">
 let currentUser = api.getCurrentUser();
 if (currentUser && currentUser.admin) {
@@ -503,7 +565,7 @@ if (currentUser && currentUser.admin) {
 
   </div>
 
-		<!-- check group -->
+<!-- check group and add my shop link for designers -->
 <script type="text/discourse-plugin" version="0.8.7">
 const isdesigner = api.getCurrentUser().groups.any(g => g.name === "designer");
 // Find the "My stuff" link by its href attribute.
@@ -520,8 +582,6 @@ if (isdesigner) {
 </script>
 
 <script type="text/javascript">
-
-
 // function to fix chat ios transforming to top
 
 	(function() {
@@ -579,70 +639,9 @@ if (isdesigner) {
   // Initial check.
   updateMainPosition();
 })();
+// finish update position for chat bug
 
-	
-// ready domcontentload
-	document.addEventListener('DOMContentLoaded', function() {
-
-		// starting the alert for self-promo
-		  let alertShown = false; // Track whether the alert has been shown
-	
-    const waitForComposer = setInterval(() => {
-        const tagsContainer = document.querySelector(".tags-input");
-        if (tagsContainer) {
-            clearInterval(waitForComposer); // Stop checking once the composer is loaded
-
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    // Check for newly added tags
-                    const selectedTags = Array.from(document.querySelectorAll(".tags-input .formatted-selection"));
-                    if (!alertShown && selectedTags.some(tag => tag.innerText.trim() === "self-promo")) {
-                        alert("Reminder: You can only post one self-promo topic every 7 days. Please check if you've already posted 🙏");
-                        alertShown = true; // Prevent further alerts
-                    }
-                });
-            });
-
-            // Observe changes in the tags container
-            observer.observe(tagsContainer, { childList: true, subtree: true });
-        }
-    }, 100); // Check every 100ms
-
-    // Optional: Stop trying after 10 seconds to avoid infinite loop
-    setTimeout(() => clearInterval(waitForComposer), 10000);
-
-//end self-promo alert code
-		
-    // Function to safely get the value of a CSS variable
-    function getCssVariableValue(variableName) {
-        return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
-    }
-
-    // Retrieve the --scheme-type variable
-    const schemeType = getCssVariableValue('--scheme-type');
-
-    // Only proceed if --scheme-type is set to 'dark' - fix Ribblr+ badges on user force dark vs prefers
-    if (schemeType === 'dark') {
-        const styleElement = document.createElement('style');
-        styleElement.type = 'text/css';
-        styleElement.innerHTML = `
-            .group--Ribblr-Plus-Gold:after, 
-            .group-Ribblr-Plus-Gold .name-username-wrapper:after, 
-            .group-Ribblr-Plus-Gold .user-profile-names__primary:after {
-                background-image: url('https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/GoldDark.png')!important;
-            }
-            
-            .group--Ribblr-Plus-Platinum:after, 
-            .group--Ribblr-Plus-Platinum .name-username-wrapper:after, 
-            .group--Ribblr-Plus-Platinum .user-profile-names__primary:after {
-                background-image: url('https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/PlatinumDark.png')!important;
-            }
-        `;
-        document.head.appendChild(styleElement);
-    }
-});
-
-	// fixes the timeline bottom issue on mobile. Important
+// fixes the timeline bottom issue on mobile. Important
 document.addEventListener('click', function(event) {
     const timeline = document.querySelector('.timeline-fullscreen');
 
