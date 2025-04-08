@@ -234,25 +234,16 @@ document.addEventListener('DOMContentLoaded', function () {
   // Run it immediately
   removeLinksIfClosed();
 
-	document.addEventListener('page:changed', function () {
-    removeLinksIfClosed();
-    
-    // In case a new .fancy-title element replaced the old one,
-    // reattach the observer to the new element.
-    const newFancyTitle = document.querySelector('.fancy-title');
-    if (newFancyTitle) {
-      // Disconnect the previous observer if it exists
-      if (titleObserver) {
-        titleObserver.disconnect();
-      }
-      titleObserver = new MutationObserver(removeLinksIfClosed);
-      titleObserver.observe(newFancyTitle, {
-        childList: true,
-        subtree: true,
-        characterData: true
-      });
-    }
-  });
+  let titleObserver;
+  const initialTitle = document.querySelector('.fancy-title');
+  if (initialTitle) {
+    titleObserver = new MutationObserver(removeLinksIfClosed);
+    titleObserver.observe(initialTitle, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
 	
 // ribbot	
     const urlParams = new URLSearchParams(window.location.search);
