@@ -220,38 +220,79 @@
 <! -- to make a reply from link -->
 <script type="text/discourse-plugin" version="0.4">
 document.addEventListener('DOMContentLoaded', function () {
-
-	// Function to remove links if the topic meets our condition.
-  function removeLinksIfClosed() {
-    // Get the current topic model.
+ // Helper: Check if the current topic is in category 17 and its title contains "closed"
+  function isTopicClosed() {
     const topic = Discourse.__container__.lookup('controller:topic').get('model');
-    // Locate the element that holds the title.
     const fancyTitle = document.querySelector('.fancy-title');
-    
-    // Check conditions: topic exists, category is 17, and title text includes "closed".
-    if (topic && topic.category_id === 17 && fancyTitle && fancyTitle.textContent.toLowerCase().includes("closed")) {
-      // Remove the href attribute from all anchor elements within .topic-body
-      document.querySelectorAll('.topic-body a').forEach(function(link) {
-        if (link.hasAttribute('href')) {
-          console.log("Removing href from link:", link);
-          link.removeAttribute('href');
-        }
-      });
-      return true; // Condition met and links were processed.
+    if (topic && fancyTitle) {
+      // If category_id might be a number or a string, use loose comparison or convert it:
+      return parseInt(topic.category_id, 10) === 17 && fancyTitle.textContent.toLowerCase().includes("closed");
     }
-    return false; // Condition not met yet.
+    return false;
   }
 
-  // Poll for up to 5 seconds, checking every 500ms.
-  let attempt = 0;
-  const maxAttempts = 10; // 10 * 500ms = 5000ms or 5 seconds
-  const pollInterval = setInterval(function() {
-    attempt++;
-    if (removeLinksIfClosed() || attempt >= maxAttempts) {
-      clearInterval(pollInterval);
-      console.log("Polling stopped after " + attempt + " attempts.");
-    }
-  }, 500);
+  // Helper: Remove the href attribute from all anchor tags in .topic-body
+  function removeHrefFromLinks() {
+    document.querySelectorAll('.topic-body a').forEach(function(link) {
+      if (link.hasAttribute('href')) {
+        console.log("Removing href from:", link);
+        link.removeAttribute('href');
+      }
+    });
+  }
+
+  // Initial check on DOMContentLoaded
+  if (isTopicClosed()) {
+    removeHrefFromLinks();
+  }
+
+  // Observer 1: Watch for attribute changes on anchor tags within .topic-body
+  const topicBody = document.querySelector('.topic-body');
+  if (topicBody) {
+    const attrObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
+          if (isTopicClosed()) {
+            console.log("Attribute change detected. Removing href from:", mutation.target);
+            mutation.target.removeAttribute('href');
+          }
+        }
+      });
+    });
+    attrObserver.observe(topicBody, { attributes: true, subtree: true, attributeFilter: ["href"] });
+  }
+
+  // Observer 2: Watch for added nodes in .topic-body
+  if (topicBody) {
+    const childObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length) {
+          if (isTopicClosed()) {
+            console.log("Child nodes added, checking for links...");
+            removeHrefFromLinks();
+          }
+        }
+      });
+    });
+    childObserver.observe(topicBody, { childList: true, subtree: true });
+  }
+
+  // Listen for Discourse's page change events (if available)
+  // This event is fired when the page content updates in a SPA environment.
+  function onPageChanged() {
+    // Use a slight delay to ensure content has fully loaded.
+    setTimeout(function () {
+      if (isTopicClosed()) {
+        removeHrefFromLinks();
+      }
+    }, 500);
+  }
+
+  if (typeof DiscourseEvent !== 'undefined' && typeof DiscourseEvent.on === 'function') {
+    DiscourseEvent.on('page:changed', onPageChanged);
+  } else {
+    document.addEventListener('page:changed', onPageChanged);
+  }
 	
 // ribbot	
     const urlParams = new URLSearchParams(window.location.search);
