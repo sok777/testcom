@@ -242,11 +242,15 @@ document.addEventListener('DOMContentLoaded', function () {
   removeLinksIfClosed();
 
   // Observe title changes dynamically in case it updates after load
-  const titleObserver = new MutationObserver(removeLinksIfClosed);
-  const titleElement = document.querySelector('.fancy-title');
-  if (titleElement) {
-    titleObserver.observe(titleElement, { childList: true, subtree: true });
-  }
+ const titleObserver = new MutationObserver(removeLinksIfClosed);
+const titleElement = document.querySelector('.fancy-title');
+if (titleElement) {
+  titleObserver.observe(titleElement, {
+    childList: true,
+    subtree: true,
+    characterData: true // catch changes in text nodes
+  });
+}
 	
     const urlParams = new URLSearchParams(window.location.search);
 
