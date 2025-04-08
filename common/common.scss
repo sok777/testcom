@@ -1,0 +1,1037 @@
+@import "var-mixin";
+
+@import "common/fkb-c-global";
+@import "common/fkb-c-input";
+@import "common/fkb-c-header";
+@import "common/fkb-c-sidebar";
+
+@import "common/fkb-c-login";
+@import "common/fkb-c-user";
+@import "common/fkb-c-search";
+@import "common/fkb-c-badges";
+@import "common/fkb-c-tags";
+
+@import "common/fkb-c-category";
+body:not(.glimmer-topic-list-failed) {
+  @import "common/fkb-c-topic-list";
+}
+body.glimmer-topic-list-failed {
+  @import "common/fkb-c-topic-list-no-glimmer";
+}
+@import "common/fkb-c-bulk-select";
+@import "common/fkb-c-bulk-select-no-glimmer";
+@import "common/fkb-c-topic";
+@import "common/fkb-c-private-message";
+@import "common/fkb-c-composer";
+
+@import "common/fkb-c-chat";
+@import "common/fkb-c-docs";
+@import "common/fkb-c-alternative-voting-category";
+@import "common/fkb-c-kanban";
+@import "common/fkb-c-search-banner";
+@import "common/fkb-c-modern-category";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
+/* saar css */
+
+:root {
+--box-shadow-img: 0 7px 14px 0 rgba(60,66,87, 0.12), 0 3px 6px 0 rgba(0,0,0, 0.12);
+    --color1: #000;
+    --color2: #404040;
+    --color_invert: #fff;
+    --invertfilter: invert(0);
+    --color_ribblr: #bf99ff;
+    --font: 'Inter', sans-serif;
+    --fontHeader: 'Plus Jakarta Sans', sans-serif;
+    --fontweight_max: 700;
+    --fontweight_heavy: 600;
+    --fontweight_main: 400;
+    --fontweight_slim: 300;
+    --font_header: 24px;
+    --font_title: 18px;
+    --font_large: 16px;
+    --font_main: 14px;
+    --font_second: 12px;
+    --font_small: 11px;
+    --opacityHover: 0.75;
+    --transition: all .17s ease-in-out;
+    --jconfirm-opac-var: 1.0;
+    --iconRibblr: #9A7CC6;
+    color-scheme: light dark;
+	/* fixes of colors for 2.0 */
+	--primary-high:var(--primary-900)!important;
+	--primary-medium:var(--primary-900)!important;
+	--pm-border-radius: var(--d-default-border-radius);
+	--primary-low: var(--secondary-very-high);
+	--primary-low-mid: var(--primary-low-mid-or-secondary-low);
+    --primary-very-low: var(--secondary-very-high);
+    --tertiary-low: var(--secondary-very-high);
+    --tertiary-very-low: var(--secondary-very-high);
+    --primary-300:var(--primary-low-mid-or-secondary-low);
+    --primary-400:var(--primary-low-mid-or-secondary-low);
+    --tertiary-medium: var(--primary-low-mid-or-secondary-low);
+    --tertiary-low-or-tertiary-high:var(--primary-low-mid-or-secondary-low);
+}
+
+div[data-theme-arcade] {
+	width:100%;
+	height:0;
+	padding-bottom:100%;
+	position:relative;
+}
+
+div[data-theme-arcade] {
+  iframe {
+	position:absolute;
+	width:100%;
+height:100%;
+	}
+}
+
+body {
+	background:var(--d-selected) !important; /*for dark mode and theme */
+	font-family: var(--font);
+	padding-bottom: env(safe-area-inset-bottom);
+    padding-top: env(safe-area-inset-top);
+}
+
+/* flair with images */
+.tl-flair {
+position:static!important;
+}
+
+.tl-avatar-flair:not(:has(.tl-1, .tl-0)) {
+    width: 20px;
+    height: 20px;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    border-radius: 50%;
+    top: 15px;
+    right: -6px;
+    padding: 2px;
+    background-color: #a471fb;
+}
+
+.mobile-view .tl-avatar-flair:not(:has(.tl-1, .tl-0)) {
+	top:-6px;
+}
+
+.tl-4 {
+background-size:16px 20px!important;
+}
+
+.user-card-avt .tl-avatar-flair {
+    width: 40px;
+    height: 40px;
+    top:0
+    }
+
+.user-card-avt .tl-4 {
+    background-size: 32px 40px!important;
+}
+
+.user-profile-avatar .tl-flair {
+    background-size: 40px 40px;
+    width: 40px;
+    height: 40px;
+}
+
+.user-profile-avatar .tl-avatar-flair {
+    width: 40px;
+    height: 40px;
+    top:0;
+	    right:10px;
+    }
+
+.user-profile-avatar .tl-4 {
+    background-size: 32px 40px!important;
+}
+
+.user-main .about.collapsed-info .tl-avatar-flair {
+    width: 14px;
+    height: 14px;
+	top: -6px;
+    right: 6px;
+}
+
+.user-main .about.collapsed-info .tl-flair {
+    background-size: 14px 14px;
+    width: 14px;
+    height: 14px;
+}
+
+.user-main .about.collapsed-info .tl-4 {
+    background-size: 11px 14px!important;
+}
+
+#reply-control.closed {
+	padding:0!important;
+}
+
+body:not(.admin) .about__stats,
+body:not(.admin) .about__activities-item.topics,
+body:not(.admin) .about__activities-item.active-users,
+body:not(.admin) .about__activities-item.sign-ups {
+display:none;
+}
+
+.post-stream .topic-post article .topic-body.highlighted
+{
+animation: background-fade-topiclight-new 1.5s ease-out!important
+}
+
+.topic-list-item.highlighted, tr.highlighted, .topic-list .topic-list-item.highlighted .main-link
+{
+animation: background-fade-topiclight-new 1.5s ease-out!important
+}
+
+@keyframes background-fade-topiclight-new {
+		0% {
+		    background-color: var(--secondary-high);
+		}
+		100% {
+		    background-color: var(--secondary);
+		}
+	}
+
+.c-navbar-container {
+transform:none!important;
+}
+.c-navbar__actions .d-icon, .btn-flat .d-icon, .json-editor-btn-collapse .d-icon, .d-modal.json-schema-editor-modal .je-ready .json-editor-btn-collapse .d-icon, .chat-composer-button .d-icon {
+    color: var(--tertiary);
+}
+
+.tap-tile-grid .tap-tile:hover, .custom-date-time-wrap {
+    background: var(--secondary-very-high)!important;
+}
+
+.tap-tile-grid .tap-tile:first-child, .d-modal__body input, .tap-tile-grid .tap-tile {
+border:none!important;
+}
+
+.c-routes.--direct-messages, .c-routes.--channels, .c-routes.--threads {
+background:var(--secondary)!important;
+}
+
+.chat-channel-row__content {
+background:none!important;
+}
+
+.chat-channel-row {
+border-color:var(--secondary)!important;
+}
+
+.chat-composer__wrapper {
+background: var(--secondary-very-high);
+}
+
+.chat-composer__inner-container {
+border-radius:12px;
+}
+
+.chat-composer__input-container {
+    background: var(--secondary)!important;
+}
+
+.select-kit.multi-select .multi-select-header, .select-kit.combo-box .select-kit-header, #reply-control .title-input input, .d-editor-textarea-wrapper {
+border-color:var(--primary)!important;
+}
+
+.sidebar-section-link-wrapper .sidebar-section-link:focus, .sidebar-section-link-wrapper .sidebar-section-link:hover, .sidebar-section-link-wrapper .sidebar-section-link.active, body.has-sidebar-page #main-outlet-wrapper .sidebar-wrapper .sidebar-footer-wrapper .sidebar-footer-container {
+    background: var(--secondary-very-high)!important;
+    }
+
+.slide-in {
+    padding-top: env(safe-area-inset-top)!important;
+	padding-bottom:env(safe-area-inset-bottom)!important;
+}
+
+
+	.d-header-wrap {
+	  top:calc(0px + env(safe-area-inset-top))!important;
+	} /* fixed menu top to show */
+
+
+@media only screen and (max-width:768px) {
+	#reply-control.open
+	{
+		min-height:350px!important;
+	}
+	.ios-device.keyboard-visible #reply-control.open {
+		padding-top:env(safe-area-inset-top)!important;
+		/*height:calc(100vh - env(safe-area-inset-top) - env(keyboard-inset-height) - env(keyboard-inset-height))!important; */
+		/*padding-bottom:env(safe-area-inset-bottom)!important;*/
+	} 
+	.has-full-page-chat #main-outlet .full-page-chat {
+	    height: 100%;
+	    min-height: 0;
+	    bottom: 0;
+	    position: relative;
+	}
+
+	/* .chat-composer__wrapper {
+		padding: .5rem 0 0 0;
+	} */
+	/* body.ios-safari-composer-hacks #reply-control:has(.in-focus) .wmd-controls {
+	  max-height: 300px;
+	} 
+
+	.keyboard-visible #reply-control .wmd-controls {
+	  max-height: 300px;
+	} */
+	#reply-control .reply-area {
+	/*padding-bottom:calc(env(safe-area-inset-bottom) + max(env(safe-area-inset-bottom), 6px)); */
+	max-height: calc(100vh - env(safe-area-inset-bottom) - env(safe-area-inset-bottom) - env(safe-area-inset-bottom));
+	}
+
+	.d-modal.chat-modal-new-message .d-modal__container {
+		top:env(safe-area-inset-top)!important;
+	}
+
+	.fk-d-menu[data-strategy=fixed] {
+    top: calc(54px + env(safe-area-inset-top))!important;
+	} /* card to show */
+
+	.chat-message-creator__search-input {
+	    border: none;
+	    outline:none;
+	}
+	
+	.chat-message-creator__search-input:focus, .chat-message-creator__search-input:focus-within {
+	outline:none;
+	border:none;
+	gap:6px;
+	}
+
+}
+
+.chat-message-thread-indicator {
+background: var(--secondary-very-high)!important;
+border-radius:12px;
+}
+
+.chat-skeleton__body:nth-of-type(odd) .chat-skeleton__message-avatar, .chat-skeleton__body:nth-of-type(odd) .chat-skeleton__message-poster, .chat-skeleton__body:nth-of-type(odd) .chat-skeleton__message-msg, 
+.chat-skeleton__message-img,
+.chat-skeleton__body:nth-of-type(even) .chat-skeleton__message-avatar,
+.chat-skeleton__body:nth-of-type(even) .chat-skeleton__message-msg,
+.chat-skeleton__message-reaction,
+.chat-skeleton__body:nth-of-type(even) .chat-skeleton__message-poster
+{
+    background: var(--secondary-very-high) !important;
+}
+
+.chat-composer__inner-container {
+border:none;
+}
+
+.c-navbar-container, .has-full-page-chat:not(.discourse-sidebar) .full-page-chat {
+border-color: var(--secondary-very-high)!important;
+}
+
+.chat-emoji-picker__filter.dc-filter-input-container {
+background: var(--secondary-very-high)!important;
+}
+
+h1,h2,h3,h4,h5 {
+	font-family:var(--fontHeader);
+	font-weight:var(--fontweight_heavy);
+}
+
+/* sidebar make it scrollable with height */
+body.has-sidebar-page #main-outlet-wrapper .sidebar-wrapper {
+	height: calc(100vh - 150px)!important;
+}
+
+/* PM border radius */
+.desktop-view .archetype-private_message .regular.contents {
+border-radius:12px;
+}
+
+/* fix search field focus weird focus */
+input#search-term:focus {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* make sure community menu stays below logo */
+.d-header-wrap {
+  position:sticky;
+	top:61px;
+  height:60px;
+	
+}
+
+.d-header {
+	box-shadow:none!important;
+}
+
+/* hide text-size and language option on community */
+.control-group.pref-locale, .control-group.text-size {
+    display: none;
+}
+
+/* for the full user profile */
+span:has(> .site-link) {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--tertiary);
+    justify-content: center;
+    display: flex
+;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    gap: 4px;
+}
+
+.site-link, .makes-link, .stash-link, .wishlist-link {
+border: none !important;
+    /* width: fit-content; */
+    /* max-width: 200px; */
+    display: block !important;
+    /* width: 200px; */
+    margin-left: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 45%;
+}
+
+.user-main .site-link, .user-main .makes-link, .user-main .stash-link, .user-main .wishlist-link {
+    max-width: 100%;
+}
+
+.user-main .site-link .public-user-fields, .user-main .makes-link .public-user-fields, .user-main .stash-link .public-user-fields, .user-main .wishlist-link .public-user-fields {
+	max-width:400px;
+	width:calc(100% - 28px);
+}
+
+.site-link .public-user-fields, .makes-link .public-user-fields, .stash-link .public-user-fields, .wishlist-link .public-user-fields {
+    color: var(--primary);
+    transition: var(--transition);
+    display: inline-block !important;
+    position: relative;
+    text-decoration: none;
+    border: none !important;
+    background: var(--fkb-btn);
+    border-radius: 40px !important;
+    width: auto;
+    text-align: center;
+	 padding:7px 14px;
+  	margin:3px;
+	min-width:110px;
+    max-width: 25%;
+    /* max-width: 200px; */
+    /* min-width: 200px; */
+}
+.user-card .metadata.email, .user-card .metadata .desc, .user-card .metadata a, .group-card .metadata.email, .group-card .metadata .desc, .group-card .metadata a {
+	color:var(--primary);
+	text-decoration:none!important;
+}
+
+#sidebar-section-content-messages .icon, #sidebar-section-content-tags .icon, #sidebar-section-content-community .icon {
+color:var(--header_primary-very-high) !important;
+}
+  
+.site-link:hover, .makes-link:hover, .site-link:active, .makes-link:active, .stash-link:hover, .stash-link:active, .wishlist-link:hover, .wishlist-link:active {
+    opacity:var(--opacityHover);
+    cursor: pointer;
+}
+.featured-topic, .public-user-field__name {
+	display:none!important;
+}
+
+.follow-statistics-user-card {
+    width: max-content;
+    display: block!important;
+}
+
+/* hide designer and crafer groups but not to admins */
+.groups-boxes .designer, .groups-boxes .crafter {
+    display: none!important;
+}
+
+.admin .groups-boxes .designer, .admin .groups-boxes .crafter {
+    display: block!important;
+}
+
+/* color of header icons */
+.d-header-icons svg, .header-sidebar-toggle button .d-icon {
+    color: var(--header_primary-very-high) !important;
+}
+
+/* hide site stats in about */
+section.about.stats { 
+  display: none;
+}
+
+/* fix progress bar on mobile */
+body.tab-bar-hidden #topic-progress-wrapper:not(.docked) {
+  bottom:0px!important;
+}
+
+html:not(.anon) #topic-progress-wrapper:not(.docked) {
+  /*margin-bottom:calc(70px + env(safe-area-inset-bottom));*/
+	margin-bottom:70px;
+	margin-right:8px;
+}
+ 
+/* admin menu remove marker */
+.post-admin-menu {
+  list-style-type: none;
+}
+
+/* banner shorter and clearer */
+#banner,
+.alert.alert-info {
+  max-height:150px;
+  background: var(--secondary)!important;
+  color: var(--primary)!important;
+}
+
+/* height of spaces colored box */
+.badge-wrapper {
+  height:max-content;
+}
+
+/* show all group options only to admin */
+.group .activity-nav li {
+display:none;
+}
+
+.group .activity-nav>li:first-child{
+   display:block!important;
+}
+
+.admin .group .activity-nav li {
+display:block!important;
+}
+
+/* hide website links */
+.user-profile-website, .website-name {
+    display:none!important;
+}
+
+.pref-website {
+display:none;
+}
+
+/* block theme change for users */
+.staff .control-group.theme {
+display: block;
+}
+.control-group.theme {
+display: none;
+}
+
+/* hide user count on groups */
+.group-user-count {
+    display: none!important;
+}
+
+/* hide count of stats next to spaces */
+footer.clearfix.category-topics-count {
+  display:none;
+}
+
+/* chat members count hide */
+.chat-tabs__memberships-count {
+    display:none;
+}
+
+.user-info .user-image
+{
+    margin:auto 0;
+}
+
+.user-info .user-detail .name-line {
+    margin: auto 0;
+}
+
+/* hide view count under post list */
+.topic-list .views {
+    display: none!important;
+}
+
+/* don't show suspend reasons or download archive */
+.suspended, .pref-data-export {
+	display:none;
+}
+
+.admin .suspended, .admin .pref-data-export {
+	display:block!important;
+}
+
+h1 img.emoji, h2 img.emoji, h3 img.emoji, h4 img.emoji, h5 img.emoji, h6 img.emoji, .topic-title .emoji {
+	vertical-align:unset
+}
+
+/* change topic subject to be regular color */
+.topic-list-main-link a.title, .topic-list .main-link a.title, .latest-topic-list-item .main-link a.title {
+	color:var(--primary);
+	font-family: var(--fontHeader);
+}
+
+/* tag add # */
+a.discourse-tag.box::before {
+    content: "#";
+	background:none!important;
+}
+
+.discourse-tag.box {
+	border-radius:20px;
+}
+
+.select-kit.combo-box.tag-drop .select-kit-row[data-value=no-tags] .name::before {
+	content: '';
+	    margin-right: 3px !important;
+}
+
+.tag-drop .name::before {
+    content: '#';
+    margin-right: -3px;
+}
+
+.category-boxes .description {
+    color: var(--primary);
+	font-weight:var(--fontweight_slim);
+}
+
+.tag-title-contents h1::before {
+    content: '#';
+    margin-right: -5px;
+}
+
+/* hiding topics from ignored users */
+.ignored-op-topic { 
+	bottom:-50px;
+}
+
+/* hide chat member count */
+.chat-channel-card__members {
+    display: none;
+}
+
+.chat-composer__input-container textarea {
+    border-radius: 0;
+}
+
+/* hide chat slug option to edit */
+.modal-body .edit-channel-control:nth-of-type(2) {
+    display: none;
+}
+
+.badge-category__wrapper .badge-category:before {
+	border-radius:50%;
+}
+
+/* fixes weird background in PM */
+.archetype-private_message .topic-body .cooked, .archetype-private_message .current-user-post .topic-body .cooked {
+	background:transparent!important;
+}
+
+/* other person PM background, instead of transparent */
+.archetype-private_message .topic-body .contents {
+    background: var(--secondary)!important;
+}
+
+/* my PM messages highlighted */
+.archetype-private_message .current-user-post .regular.contents {
+	background:var(--highlight-bg)!important;
+}
+
+.chat-message .chat-message-collapser .chat-message-collapser-header+div .chat-message-collapser-lazy-video {
+	max-height:max-content;
+}
+
+/* Ribblr+ badges based on group */
+.group--Ribblr-Plus-Gold:after {
+    content: "";
+    display: inline-block;
+    width: 45px;
+    height: 15px;
+    background-image: url(https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/GoldLight.png);
+    background-size: cover;
+    background-position: center;
+    margin-left: 5px;
+    top: 3px;
+    position: relative;
+}
+
+.group--Ribblr-Plus-Platinum:after {
+    content: "";
+    display: inline-block;
+    width: 58px;
+    height: 15px;
+    background-image: url(https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/PlatinumLight.png);
+    background-size: cover;
+    background-position: center;
+    margin-left: 5px;
+    top: 3px;
+    position: relative;
+}
+
+.group-Ribblr-Plus-Gold .name-username-wrapper:after, .group-Ribblr-Plus-Gold .user-profile-names__primary:after {
+	content: "";
+    display: inline-block;
+    width: 67.5px;
+    height: 22.5px;
+    background-image: url(https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/GoldLight.png);
+    background-size: cover;
+    background-position: center;
+    margin-left: 5px;
+    top: 3px;
+    position: relative;
+}
+
+.group-Ribblr-Plus-Platinum .name-username-wrapper:after, .group-Ribblr-Plus-Platinum .user-profile-names__primary:after {
+    content: "";
+    display: inline-block;
+    width: 87px;
+    height: 22.5px;
+    background-image: url(https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/PlatinumLight.png);
+    background-size: cover;
+    background-position: center;
+    margin-left: 5px;
+    top: 3px;
+    position: relative;
+}
+
+.chat-message-content .group--Ribblr-Plus-Gold:after {
+    top: 0px!important;
+}
+
+.list-controls .nav-pills>li>a {
+	border-radius:0!important;
+}
+
+/* remove the statistics from card */
+.metadata__time-read, .follow-statistics-user-card {
+	display:none!important;
+}
+
+.metadata__last-posted, .metadata__user-created, .accepted-answers {
+    border: none !important;
+    flex-flow: column;
+    text-align: center;
+	width: calc(33% - 16px);
+    background: var(--secondary-very-high);
+    border-radius: 12px !important;
+	padding:4px!important;
+	font-size:12px;
+}
+ #user-card .metadata {
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--tertiary);
+    justify-content: center;
+    }
+    
+    #user-card .location-and-website {
+    display:none
+    }
+
+/* fix user status aligning on mobile */
+.topic-meta-data .names .poster-icon-container {
+order:3!important;
+height:16px;
+}
+/* end of fix */
+
+/* hide the word 'forum' */
+.back-to-forum {
+color: transparent!important; /* Makes the text color transparent */
+}
+
+/* move latest nav to top instead of fixed */
+#navigation-bar {
+    position: relative !important;
+    left: unset !important;
+    top: unset !important;
+    bottom: unset !important;
+	margin:5px 0!important;
+	justify-content: end;
+}
+
+.navigation-topics .list-controls .navigation-container #navigation-bar .list-control-toggle-link-trigger, .categories-list .list-controls .navigation-container #navigation-bar .list-control-toggle-link-trigger, body[class*=tag-]:not(.archetype-regular):not(.archetype-banner) .list-controls .navigation-container #navigation-bar .list-control-toggle-link-trigger, body[class*=category-]:not(.archetype-regular):not(.archetype-banner) .list-controls .navigation-container #navigation-bar .list-control-toggle-link-trigger {
+    box-shadow: unset !important;
+    padding: 0 !important;
+	font-size: var(--font-0-rem);
+    font-weight: 500 !important;
+}
+
+/* names in topics as main color */
+.names a {
+    color: var(--primary) !important;
+}
+
+/* align names in badge pages */
+.user-info .user-detail {
+    align-content: center;
+}
+
+.badge-category__wrapper .badge-category__name {
+	line-height:unset!important;
+}
+
+/* edits to profile page */
+.user-main .about .secondary dt {
+	color:var(--primary-800)!important;
+}
+
+.public-user-field span {
+    color: var(--primary)!important;
+}
+
+.new-user-wrapper .new-user-content-wrapper .user-navigation-secondary {
+	padding:0.5em 1em!important;
+}
+
+.stats-title {
+	text-transform: none!important;
+}
+/* end edits to profile page */
+
+/* PM fix summary */
+.archetype-private_message .topic-map section {
+	background:none!important;
+}
+
+.topic-map.--op {
+    border-radius: 0 !important;
+    margin: 20px;
+    /* margin: auto; */
+    width: 100%;
+}
+
+/* social media icon colors */
+.iconic-user-fields .fa {
+    color: var(--primary)!important;
+}
+
+.mobile-view .topic-owner .onscreen-post {
+	padding-bottom:8px!important;
+}
+
+/* fix notification active menu color */
+.user-menu .quick-access-panel li.unread, .user-menu .quick-access-panel li.pending, .user-notifications-list li.unread, .user-notifications-list li.pending {
+    background-color: var(--highlight-medium);
+}
+
+.user-menu .quick-access-panel li:hover, .user-notifications-list li:hover {
+    background-color: var(--d-hover) !important;
+}
+
+/* correcting tag and space desktop when hamburger is not open */
+body[class*=tag-]:not(.archetype-regular):not(.archetype-banner):not(.has-sidebar-page) .list-controls .navigation-container ol {
+    padding: 10px 0 10px 10px;
+    height: 30px;
+}
+
+/* remove li style on polls */
+.poll li {
+    list-style: none;
+}
+
+	@media screen and (min-width: 1200px) {
+
+	/* moving desktop nav container to stretch */
+	.navigation-container {
+	    justify-content: space-between;
+	}
+}
+/* stretching topics on full width on mobile */
+	@media screen and (max-width: 800px) {
+    .full-width #list-area {
+        width: inherit!important;
+    }
+    
+    #main-outlet-wrapper {
+    padding: 0!important;
+	}
+
+		.topic-area {
+	width:100vw;
+	}
+
+		#topic-title {
+			padding:1em!important;
+		}
+
+		#main>div #main-outlet {
+			padding:0!important;
+		}
+
+	.topic-list-header {
+		display:none!important;
+	}
+
+		.topic-map, #topic-footer-buttons {
+    margin: 0 10px!important;
+	}
+		/* fixes timeline bug, until Discourse releases fix. This means user can only use timeline once per post */
+		.timeline-container.timeline-fullscreen {
+			display:none;
+		}
+		.timeline-container.timeline-fullscreen.show {
+			display:block;
+		}
+		
+	#main-outlet-wrapper {
+	    overflow: hidden;
+	    position: relative; /* Ensure sticky elements within are still positioned correctly */
+	}
+
+		.chat-enabled #main-outlet-wrapper {
+			overflow:unset;
+		}
+
+		.list-controls .container {
+			margin-top:1em;
+		}
+}
+
+@media (prefers-color-scheme: dark) {
+	  .group--Ribblr-Plus-Gold:after, .group-Ribblr-Plus-Gold .name-username-wrapper:after, .group-Ribblr-Plus-Gold .user-profile-names__primary:after {
+	        background-image: url(https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/GoldDark.png);
+	  }
+
+	.group--Ribblr-Plus-Platinum:after, .group-Ribblr-Plus-Platinum .name-username-wrapper:after, .group-Ribblr-Plus-Platinum .user-profile-names__primary:after {
+		background-image: url(https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/PlatinumDark.png);
+	}
+}
+
+/* make create a topic prominant, especially on mobile */
+@media only screen and (max-width:767px) {
+
+	.user-main, .archetype-private_message .post-stream article {
+	    width: calc(100vw)!important;
+	max-width: calc(100vw)!important;
+	}
+
+	.badges h1, .badges h2, .badge h3, .show-badge h1, .show-badge h2, .show-badge h3 {
+	padding:0px 10px;
+	}
+
+	.show-badge .show-badge-details { margin-bottom:0; }
+
+	.show-badge .user-info { margin:0 }
+
+	.badges-granted { gap:0; padding:10px;}
+
+	.mobile-view .body-page, .cakeday {
+		padding: 20px;
+        width: calc(100% - 40px);
+	}
+  
+  /* don't show the notifications options on mobile */
+  .desktop-notifications {
+    display: none;
+  }
+
+	.btn-floating.open-new-message-btn {
+    bottom: 90px!important;
+	right:0.5em!important;
+	}
+	
+	body.has-full-page-chat .btn-floating.open-draft-channel-page-btn {
+	    bottom: 100px!important;
+	}
+    
+   #main-outlet-wrapper {
+        padding-bottom:65px;
+    }
+
+	.has-full-page-chat #main-outlet-wrapper {
+		padding:0!important;
+	}
+  
+  /* fix bottom tab*/
+  body.tab-bar-hidden .d-tab-bar {
+    bottom:-80px;
+  }
+}
+
+
+@media only screen and (max-width:1024px) {
+    /* move new topic button slightly up not to clash with bottom menu */
+    .navigation-controls {
+    bottom: 95px!important;
+	}
+	
+	/* avoid the new post indicator creating extra screen space */
+	.topic-post.clearfix {
+    overflow: hidden;
+	}
+	/* for tablets with bottom nav, but not mobile detected */
+	#reply-control.open
+	{
+		z-index:1000;
+	}
+	.chat-drawer-outlet-container {
+	bottom:65px!important;
+	}
+}
+
+@media only screen and (min-width:768px) {
+
+	.chat-composer__input-container {
+	background:var(--secondary);
+	}
+	
+	.chat-composer__wrapper {
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+	div#reply-control {
+	    z-index: 1001;
+		padding-bottom: env(safe-area-inset-bottom);
+		/*padding-top: env(safe-area-inset-top);*/
+	}
+
+	.ios-device.keyboard-visible #reply-control {
+	padding-top:env(safe-area-inset-top)!important;
+	}
+
+	#navigation-bar {
+	max-width:95%;
+	}
+
+	/* html.keyboard-visible .chat-channel {
+		min-height:550px!important;
+		padding-top:0px!important;
+		top:0!important;
+		bottom:0!important;
+		padding-bottom:0px!important;
+	} */
+
+	.site-link .public-user-fields, .makes-link .public-user-fields, .stash-link .public-user-fields, .wishlist-link .public-user-fields {
+		min-width:175px;
+	}
+}
+
+@media only screen and (min-width:1024px) {
+ /* .chat-drawer-outlet-container {
+		padding-bottom: calc(env(safe-area-inset-bottom) + env(safe-area-inset-bottom))!important;
+	}
+	.chat-composer__wrapper {
+		padding-bottom: calc(env(safe-area-inset-bottom) + env(safe-area-inset-bottom))!important;
+	} */
+
+	.d-header-wrap {
+		top:0;
+	}
+}
+
+.show-badge-details .badge-card .badge-contents .badge-icon {
+	--badge-icon-size-custom: 8em!important;
+}
+
+.show-badge-details .badge-card .badge-contents .badge-icon img {
+	max-height:var(--badge-icon-size-custom)!important;
+	max-width:var(--badge-icon-size-custom)!important;
+}

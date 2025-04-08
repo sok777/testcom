@@ -1,0 +1,775 @@
+<!-- Remove topic list header -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap');
+	
+	 @media (prefers-color-scheme: dark) {
+            :root {
+    --box-shadow-img: 0 7px 14px 0 rgb(43 43 43), 0 3px 6px 0 rgb(171 171 171);
+    --invertfilter: invert(1);
+            }
+	}
+
+.mediaViewInfo {
+	--web-scale-on-resize: true;
+	--web-enable-deep-linking: true;
+}
+	
+.bottom_menu {
+	display:none;
+	-webkit-tap-highlight-color: transparent;
+	padding:0;
+}
+
+/* THIS IS THE HEADER */
+.dev_menu_Class {
+	/* background-color: rgba(255,255,255,1); */
+	overflow: hidden;
+     /*   height: 105px; */
+    top: 0px;
+	height:61px;
+  white-space:nowrap;
+	--web-view-name: Ribblr;
+	--web-view-id: Ribblr;
+	--web-scale-on-resize: true;
+	--web-enable-deep-linking: true;
+  font-family: var(--font);
+  font-size: var(--font_large);
+  font-feature-settings: "lnum";
+  background:var(--header_background); /* for dark theme */
+ /* border-bottom:2px solid #ccc; */
+ /* position: sticky;*/
+  z-index:999;
+  overflow:visible;
+	position: sticky !important;
+    left: 0px;
+    width: 100%;
+	display:block;
+}
+
+.top_menu {
+	max-width:calc(var(--d-sidebar-width) + var(--d-max-width));
+	margin:auto;
+	position:relative;
+}
+
+.Logo_Class {
+	position: absolute;
+	left: 1.5%;
+    /* top:1%; */
+   /* top: 0.5em; */
+    top:1em;
+	overflow: visible;
+  transition:transform .3s linear;
+}
+
+#logo {
+	height:28px;
+      -webkit-tap-highlight-color: transparent!important;
+}
+
+@media only screen and (min-width: 1025px) {
+    .bottom_menu {
+        display: none !important;
+    }
+}
+@media only screen and (max-width:768px) {
+	.d-header .panel {
+ 		margin:auto;
+	}
+	    .d-header .d-header-icons {
+		    display:flex;
+ 		margin:auto;
+		    justify-content:space-evenly;
+ 		width:90vw;
+	    }
+}
+@media only screen and (min-width:768px) and (max-width:1024px) {
+	.d-header .panel {
+		margin:0;
+		margin-left:auto;
+	}
+}
+/* Ribblr 1.5 menus */
+@media only screen and (max-width:1024px) {
+
+	/* hide community logo on mobile */
+	#site-logo {
+		display:none;
+	}
+	
+	.d-header .title {
+		min-width:0px
+	}
+	
+	.d-header .d-header-icons {
+		display:flex;
+		margin:auto;
+	}
+
+	.current-user {
+		order:4;
+	}
+
+	.chat-header-icon {
+		order:3;
+	}
+	
+	.search-dropdown {
+		order:2;
+	}
+
+	.hamburger-dropdown {
+		order:1;
+	}
+
+	/* fix this to show it OVER bottom nav */
+	.has-full-page-chat .bottom_menu {
+		/*display:none;
+		bottom:-300px; */
+		z-index:-1;
+		display:none!important;
+		padding-bottom:0!important;
+	} 
+
+	.has-full-page-chat .d-header .d-header-icons {
+		width:max-content;
+	}
+
+	.top_menu {
+		display:none;
+	}
+
+	#dev_menu {
+		height:0;
+	}
+	
+	    .Logo_Class {
+	        position:relative;
+	        top:auto;
+	        left:auto;
+	    }
+
+	.bottom_menu {
+		display: flex
+;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    height: 65px;
+    padding-bottom: env(safe-area-inset-bottom);
+    justify-content: space-around;
+    background: var(--background);
+    border-top: 1px solid var(--menu);
+    align-items: center;
+    color: var(--textMain);
+    font-size: var(--font_third);
+    font-family: var(--fontInter);
+    line-height: 12px;
+			    background: var(--d-selected);
+
+	}
+
+	/*    .bottom_menu {
+	        display:flex;
+	    position: fixed;
+	    bottom: 0!important;
+	    left: 0;
+		    opacity:1;
+	    z-index: 3;
+	    height: 56px;
+	      width:100vw;
+	    justify-content: space-around;
+	    background: var(--d-selected);
+	    border-top: 1px solid #EAE1ED;
+	    align-items: center;
+		    padding:0;
+	    } */
+
+	    .bottom_menu div {
+	        width: 40px;
+	        transition: all .23s ease-in-out;
+		    display:flex;
+	flex-direction: column;
+        align-items: center;
+        color: var(--primary);
+        font-size: 10px;
+        line-height: 12px;
+		    gap:2px;
+	    }
+
+    .bottom_menu svg {
+        height:24px!important;
+        /*width:24px!important;*/
+        position:relative;
+        transform:translate3d(0, 0, 0);
+    }
+
+	.bottom_menu div {
+    transition: all 0.25s ease-in-out; /* Smooth transition for opacity */
+			  border-radius:12px;
+  }
+
+  .bottom_menu div:active {
+	  opacity:0.3;
+  }
+}
+	</style>
+
+<! -- to make a reply from link -->
+<script type="text/discourse-plugin" version="0.4">
+  $(document).ready(function () {
+
+	// remove links from closed tester calls.
+	function removeLinksIfClosed() {
+    // Get the current topic data directly
+    const topic = Discourse.__container__.lookup('controller:topic').get('model');
+
+    // Check if we are in category ID 17
+    if (topic && topic.category_id === 17) {
+      // Check if the .fancy-title contains the word "closed" (case-insensitive)
+      if ($('.fancy-title').text().toLowerCase().includes("closed")) {
+        // Remove href attribute from all links within .topic-body
+        $('.topic-body a').removeAttr('href');
+      }
+    }
+  }
+
+  // Initial check on document ready
+  removeLinksIfClosed();
+
+  // Observe title changes dynamically in case it updates after load
+  const titleObserver = new MutationObserver(removeLinksIfClosed);
+  const titleElement = document.querySelector('.fancy-title');
+  if (titleElement) {
+    titleObserver.observe(titleElement, { childList: true, subtree: true });
+  }
+	
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has('payload')) {
+      const base64Payload = urlParams.get('payload');
+      
+      try {
+        // Decode the base64 payload
+        const decodedPayload = atob(base64Payload);
+        const payloadObj = JSON.parse(decodedPayload);
+        
+        const draftText = payloadObj.reply || "";
+        const token = payloadObj.token || "";
+
+        const { REPLY } = require('discourse/models/composer').default;
+        const composer = Discourse.__container__.lookup('controller:composer');
+
+        // Only run timeouts when the window has fully loaded (after page is fully loaded)
+		if(draftText) {
+			$(window).on('load', function () {
+			  setTimeout(function () {
+				const topic = Discourse.__container__.lookup("controller:topic").get("model");
+				if (topic) {
+				  composer.open({
+					action: REPLY,
+					draftKey: topic.draft_key,
+					draftSequence: topic.draft_sequence,
+					topic,
+					topicBody: draftText
+				  });
+				}
+			  }, 0);
+
+			  setTimeout(function () {
+				composer.save();
+			  }, 1000);
+			});
+		}
+
+        if (token) {
+          $.ajax({
+            url: "https://ribblr.com/ribbot_postcard",
+            method: "POST",
+            async: true,
+            data: {
+              token: token,
+              community_username: Discourse.User.currentProp('username'),
+              user_id: Discourse.User.currentProp('external_id'),
+              user_community_id: Discourse.User.currentProp('id'),
+            },
+          });
+        }
+
+      } catch (error) {
+        console.error("Error parsing payload:", error);
+      }
+    }
+
+  });
+</script>
+
+<script
+  type="text/x-handlebars"
+  data-template-name="topic-list-header.raw"
+></script>
+
+<!-- Restrcture post count -->
+
+<script
+  type="text/x-handlebars"
+  data-template-name="list/posts-count-column.raw"
+>
+
+  <a href class='posts-map badge-posts {{view.likesHeat}}'>
+    {{raw-plugin-outlet name="topic-list-before-reply-count"}}
+    {{number topic.replyCount noTitle="true"}} {{d-icon "far-comment"}}
+  </a>
+</script>
+
+<!--  Restructure topic list item  -->
+
+<script type="text/x-handlebars" data-template-name="list/topic-list-item.raw">
+  {{#if bulkSelectEnabled}}
+  <td class="bulk-select">
+    <input type="checkbox" class="bulk-select">
+  </td>
+  {{/if}}
+
+  <div class='main-link clearfix' colspan="1">
+    <span class='link-top-line'>
+      <div class="byline">
+        <div class="author">
+          {{~raw-plugin-outlet name="topic-list-before-status"}}
+          <a href="{{topic.posters.[0].user.userPath}}" data-user-card="{{topic.posters.[0].user.username}}">
+            {{avatar topic.posters.[0].user imageSize='medium'}}
+            <div class="name-and-date">
+              <span class="username">{{topic.posters.[0].user.username}}</span>
+              {{format-date topic.createdAt format="tiny"}}
+            </div>
+          </a>
+
+        </div>
+        {{#unless hideCategory}}
+        {{#unless topic.isPinnedUncategorized}}
+        {{category-link topic.category}}
+        {{/unless}}
+        {{/unless}}
+
+      </div>
+      <div class="link-middle-line" id='{{#if topic.hasExcerpt}}link-middle-line-excerpt{{/if}}' >
+        <div class="topic-title">
+          {{~raw "topic-status" topic=topic}}
+          {{~topic-link topic class="raw-link raw-topic-link"}}
+          {{~#if topic.featured_link}}
+          {{~topic-featured-link topic}}
+          {{~/if}}
+          {{~#if showTopicPostBadges}}
+          {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+          {{~/if}}
+        </div>
+
+        {{~raw-plugin-outlet name="topic-list-after-title"}}
+        {{#if topic.hasExcerpt}}
+        <div class="topic-excerpt">
+          {{raw "list/topic-excerpt" topic=topic}}
+        </div>
+        {{/if}}
+        {{#if topic.image_url}}
+        <div class="topic-image">
+          <img src="{{topic.image_url}}" />
+        </div>
+        {{/if}}
+        {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+
+
+      </span>
+
+    </div>
+    <div class="link-bottom-line">
+
+      {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+
+      {{#if hasLikes}}
+      <a class="likes" href='{{topic.summaryUrl}}'>
+        {{number topic.like_count}} {{d-icon "heart"}}
+      </a>
+
+      {{/if}}
+      {{raw "list/posts-count-column" topic=topic}}
+
+    </div>
+
+  </div>
+</script>
+
+<!-- User Profile Link -->
+<script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/site-link'>
+  {{#if this.model.website}}
+    {{#unless (eq this.model.website "https://ribblr.com")}}
+      <div class="public-user-fields">
+        <div class="public-user-field">
+	<a href="https://ribblr.com/myshop?username={{this.model.username}}" target="_blank">
+          <span aria-label="my shop" class="myshop_link myshop_link2" id="{{this.model.username}}">My shop</span>
+</a>
+        </div>
+      </div>
+    {{/unless}}
+  {{/if}}
+</script>
+
+<!-- User Card Link -->
+<script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/site-link'>
+  {{#if this.user.website}}
+    {{#unless (eq this.user.website "https://ribblr.com")}}
+      <div class="public-user-fields">
+        <div class="public-user-field">
+	<a href="https://ribblr.com/myshop?username={{this.user.username}}" target="_blank">
+          <span aria-label="my shop" class="myshop_link myshop_link2" id="{{this.user.username}}">My shop</span>
+</a>
+        </div>
+      </div>
+    {{/unless}}
+  {{/if}}
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/makes-link'>
+  {{#if this.model.username}}
+    <div class="public-user-fields">
+      <div class="public-user-field">
+	<a href="https://ribblr.com/journal/{{this.model.username}}" target="_blank">
+        <span aria-label="my makes" class="myshop_link myjournals" id="{{this.model.username}}">My makes</span>
+</a>
+      </div>
+    </div>
+  {{/if}}
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/makes-link'>
+  {{#if this.user.username}}
+    <div class="public-user-fields">
+      <div class="public-user-field">
+	<a href="https://ribblr.com/journal/{{this.user.username}}" target="_blank">
+        <span aria-label="my makes" class="myshop_link myjournals" id="{{this.user.username}}">My makes</span>
+</a>
+      </div>
+    </div>
+  {{/if}}
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/stash-link'>
+  {{#if this.model.username}}
+    <div class="public-user-fields">
+      <div class="public-user-field">
+	<a href="https://ribblr.com/stash/{{this.model.username}}" target="_blank">
+        <span aria-label="my stash" class="mystash" id="{{this.model.username}}">My stash</span>
+</a>      
+</div>
+    </div>
+  {{/if}}
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/stash-link'>
+  {{#if this.user.username}}
+    <div class="public-user-fields">
+      <div class="public-user-field">
+      <div class="user-field-value">
+			<a href="https://ribblr.com/stash/{{this.user.username}}" target="_blank">
+	<span aria-label="my stash" class="mystash" id="{{this.user.username}}">My stash</span>
+</a>
+</div>  
+
+</div>
+    </div>
+  {{/if}}
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/wishlist-link'>
+  {{#if this.model.username}}
+    <div class="public-user-fields">
+      <div class="public-user-field">
+		<a href="https://ribblr.com/wishlist/{{this.model.username}}" target="_blank">
+        <span aria-label="my wishlist" class="mywishlist" id="{{this.model.username}}">My wishlist</span>
+</a>      
+</div>
+    </div>
+  {{/if}}
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/wishlist-link'>
+  {{#if this.user.username}}
+    <div class="public-user-fields">
+      <div class="public-user-field">
+	<a href="https://ribblr.com/wishlist/{{this.user.username}}" target="_blank">
+        <span aria-label="my wishlist" class="mywishlist" id="{{this.user.username}}">My wishlist</span>
+ </a>     
+</div>
+    </div>
+  {{/if}}
+</script>
+
+
+
+<script type="text/discourse-plugin" version="0.8.23">
+let currentUser = api.getCurrentUser();
+if (currentUser && currentUser.admin) {
+    $('body').addClass('admin');
+}
+</script>
+
+<!-- Ribblr header -->
+<div id="dev_menu" class="dev_menu_Class">
+<div class="top_menu">
+  <div class="Logo_Class">
+	  	<a href="https://ribblr.com" target="_blank">
+    <img id="logo" alt="ribblr logo" src="https://ribblr.com/images/logo.png?v=0.01">
+				</a>
+    </div> 
+</div>
+	
+<!-- bottom menu mobile -->
+<div class="bottom_menu" id="bottom_menu">
+	<a href="https://ribblr.com" target="_blank">
+  <div class="Logo_Class">
+	    <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_3339_273599" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+<rect width="24" height="24" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_3339_273599)">
+<path d="M4 19V10C4 9.68333 4.07083 9.38333 4.2125 9.1C4.35417 8.81667 4.55 8.58333 4.8 8.4L10.8 3.9C11.15 3.63333 11.55 3.5 12 3.5C12.45 3.5 12.85 3.63333 13.2 3.9L19.2 8.4C19.45 8.58333 19.6458 8.81667 19.7875 9.1C19.9292 9.38333 20 9.68333 20 10V19C20 19.55 19.8042 20.0208 19.4125 20.4125C19.0208 20.8042 18.55 21 18 21H15C14.7167 21 14.4792 20.9042 14.2875 20.7125C14.0958 20.5208 14 20.2833 14 20V15C14 14.7167 13.9042 14.4792 13.7125 14.2875C13.5208 14.0958 13.2833 14 13 14H11C10.7167 14 10.4792 14.0958 10.2875 14.2875C10.0958 14.4792 10 14.7167 10 15V20C10 20.2833 9.90417 20.5208 9.7125 20.7125C9.52083 20.9042 9.28333 21 9 21H6C5.45 21 4.97917 20.8042 4.5875 20.4125C4.19583 20.0208 4 19.55 4 19Z" stroke="var(--highlight)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>
+	  Feed
+    </div> 
+	</a>
+	<a href="https://ribblr.com/search" target="_blank">
+	    <div class="search_menu_Class">
+        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="var(--highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+		    Search
+      </div>
+	</a>
+	            <a aria-label="Community" class="guestlink" href="/">
+        <div class="community_class guestlogin" style="color:var(--tertiary); font-weight:600;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.63158 22C10.5965 22 13 19.5376 13 16.5C13 13.4624 10.5965 11 7.63158 11C7.09736 11 6.58136 11.0799 6.09436 11.2288C3.87857 11.906 2.26316 14.0097 2.26316 16.5C2.26316 17.1106 2.36028 17.6979 2.53955 18.2467C2.61533 18.4787 2.65322 18.5947 2.66566 18.6739C2.67864 18.7567 2.68091 18.8031 2.67608 18.8867C2.67145 18.9668 2.65141 19.0573 2.61134 19.2383L2 22L4.9948 21.591C5.15827 21.5687 5.24 21.5575 5.31137 21.558C5.38652 21.5585 5.42641 21.5626 5.50011 21.5773C5.5701 21.5912 5.67416 21.6279 5.88227 21.7014C6.43059 21.8949 7.01911 22 7.63158 22Z" fill="var(--tertiary)"/>
+<path d="M6.09436 11.2288C6.03221 10.8282 5.99996 10.4179 5.99996 10C5.99996 5.58172 9.60525 2 14.0526 2C18.4999 2 22.1052 5.58172 22.1052 10C22.1052 10.9981 21.9213 11.9535 21.5852 12.8345C21.5154 13.0175 21.4805 13.109 21.4646 13.1804C21.4489 13.2512 21.4428 13.301 21.4411 13.3735C21.4394 13.4466 21.4493 13.5272 21.4692 13.6883L21.8717 16.9585C21.9153 17.3125 21.9371 17.4895 21.8782 17.6182C21.8266 17.731 21.735 17.8205 21.6211 17.8695C21.4911 17.9254 21.3146 17.8995 20.9617 17.8478L17.7765 17.3809C17.6101 17.3565 17.527 17.3443 17.4512 17.3448C17.3763 17.3452 17.3245 17.3507 17.2511 17.3661C17.177 17.3817 17.0824 17.4172 16.893 17.4881C16.0097 17.819 15.0524 18 14.0526 18C13.6344 18 13.2237 17.9683 12.8227 17.9073M6.09436 11.2288C6.58136 11.0799 7.09736 11 7.63158 11M6.09436 11.2288C3.87857 11.906 2.26316 14.0097 2.26316 16.5M2.26316 16.5C2.26316 17.1106 2.36028 17.6979 2.53955 18.2467C2.61533 18.4787 2.65322 18.5947 2.66566 18.6739C2.67864 18.7567 2.68091 18.8031 2.67608 18.8867C2.67145 18.9668 2.65141 19.0573 2.61134 19.2383L2 22L4.9948 21.591C5.15827 21.5687 5.24 21.5575 5.31137 21.558C5.38652 21.5585 5.42641 21.5626 5.50011 21.5773C5.5701 21.5912 5.67416 21.6279 5.88227 21.7014C6.43059 21.8949 7.01911 22 7.63158 22C10.5965 22 13 19.5376 13 16.5C13 13.4624 10.5965 11 7.63158 11M2.26316 16.5C2.26316 13.4624 4.66668 11 7.63158 11" stroke="var(--tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+		    Community
+        </div>
+	            </a>
+	<a href="https://ribblr.com/mystuff" target="_blank">
+		
+		<div class="my_stash_Class guestlogin">
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.4 1H2.6C2.03995 1 1.75992 1 1.54601 1.10899C1.35785 1.20487 1.20487 1.35785 1.10899 1.54601C1 1.75992 1 2.03995 1 2.6V6.4C1 6.96005 1 7.24008 1.10899 7.45399C1.20487 7.64215 1.35785 7.79513 1.54601 7.89101C1.75992 8 2.03995 8 2.6 8H6.4C6.96005 8 7.24008 8 7.45399 7.89101C7.64215 7.79513 7.79513 7.64215 7.89101 7.45399C8 7.24008 8 6.96005 8 6.4V2.6C8 2.03995 8 1.75992 7.89101 1.54601C7.79513 1.35785 7.64215 1.20487 7.45399 1.10899C7.24008 1 6.96005 1 6.4 1Z" stroke="var(--highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.4 1H13.6C13.0399 1 12.7599 1 12.546 1.10899C12.3578 1.20487 12.2049 1.35785 12.109 1.54601C12 1.75992 12 2.03995 12 2.6V6.4C12 6.96005 12 7.24008 12.109 7.45399C12.2049 7.64215 12.3578 7.79513 12.546 7.89101C12.7599 8 13.0399 8 13.6 8H17.4C17.9601 8 18.2401 8 18.454 7.89101C18.6422 7.79513 18.7951 7.64215 18.891 7.45399C19 7.24008 19 6.96005 19 6.4V2.6C19 2.03995 19 1.75992 18.891 1.54601C18.7951 1.35785 18.6422 1.20487 18.454 1.10899C18.2401 1 17.9601 1 17.4 1Z" stroke="var(--highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.4 12H13.6C13.0399 12 12.7599 12 12.546 12.109C12.3578 12.2049 12.2049 12.3578 12.109 12.546C12 12.7599 12 13.0399 12 13.6V17.4C12 17.9601 12 18.2401 12.109 18.454C12.2049 18.6422 12.3578 18.7951 12.546 18.891C12.7599 19 13.0399 19 13.6 19H17.4C17.9601 19 18.2401 19 18.454 18.891C18.6422 18.7951 18.7951 18.6422 18.891 18.454C19 18.2401 19 17.9601 19 17.4V13.6C19 13.0399 19 12.7599 18.891 12.546C18.7951 12.3578 18.6422 12.2049 18.454 12.109C18.2401 12 17.9601 12 17.4 12Z" stroke="var(--highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6.4 12H2.6C2.03995 12 1.75992 12 1.54601 12.109C1.35785 12.2049 1.20487 12.3578 1.10899 12.546C1 12.7599 1 13.0399 1 13.6V17.4C1 17.9601 1 18.2401 1.10899 18.454C1.20487 18.6422 1.35785 18.7951 1.54601 18.891C1.75992 19 2.03995 19 2.6 19H6.4C6.96005 19 7.24008 19 7.45399 18.891C7.64215 18.7951 7.79513 18.6422 7.89101 18.454C8 18.2401 8 17.9601 8 17.4V13.6C8 13.0399 8 12.7599 7.89101 12.546C7.79513 12.3578 7.64215 12.2049 7.45399 12.109C7.24008 12 6.96005 12 6.4 12Z" stroke="var(--highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+	      My stuff
+      </div>
+	</a>
+
+  </div>
+
+		<!-- check group -->
+<script type="text/discourse-plugin" version="0.8.7">
+const isdesigner = api.getCurrentUser().groups.any(g => g.name === "designer");
+// Find the "My stuff" link by its href attribute.
+const mystuffLink = document.querySelector('a[href="https://ribblr.com/mystuff"]');
+
+if (isdesigner) {
+	if (mystuffLink) {
+  const newItemHtml = '<a href="https://ribblr.com/myshop" target="_blank"><div class="Myshop_class"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.25 21V16.35C14.25 15.7899 14.25 15.5099 14.141 15.296C14.0451 15.1078 13.8922 14.9549 13.704 14.859C13.4901 14.75 13.2101 14.75 12.65 14.75H11.35C10.7899 14.75 10.5099 14.75 10.296 14.859C10.1078 14.9549 9.95487 15.1078 9.85899 15.296C9.75 15.5099 9.75 15.7899 9.75 16.35V21M14.25 21H17.8M14.25 21H9.75M9.75 21H6.2M6.2 21H17.8M6.2 21C5.07989 21 4.51984 21 4.09202 20.782C3.71569 20.5903 3.40973 20.2843 3.21799 19.908C3 19.4802 3 18.9201 3 17.8V6.2M17.8 21C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V6.2M21 6.2C21 5.0799 21 4.51984 20.782 4.09202C20.5903 3.71569 20.2843 3.40973 19.908 3.21799C19.4802 3 18.9201 3 17.8 3H6.2C5.0799 3 4.51984 3 4.09202 3.21799C3.71569 3.40973 3.40973 3.71569 3.21799 4.09202C3 4.51984 3 5.07989 3 6.2M21 6.2V7C21 8.65685 19.6569 10 18 10C16.3431 10 15 8.65685 15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 8.65685 7.65685 10 6 10C4.34315 10 3 8.65685 3 7V6.2" stroke="var(--highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>My shop</div></a>';
+  
+  // Insert the new item right before the "My stuff" link.
+  mystuffLink.insertAdjacentHTML('beforebegin', newItemHtml);
+	}	
+}
+</script>
+
+<script type="text/javascript">
+
+
+// function to fix chat ios transforming to top
+
+	(function() {
+  function updateMainPosition() {
+    var mainEl = document.getElementById('main');
+    if (!mainEl) {
+      console.log("No element with id 'main' found.");
+      return;
+    }
+
+    // Only adjust if the HTML has the "keyboard-visible" class.
+    if (document.documentElement.classList.contains('keyboard-visible')) {
+      // Get the absolute offset from the body's top.
+      var offset = Math.abs(document.body.getBoundingClientRect().top);
+      
+      // If the .chat-composer-message-details element exists,
+      // reduce the offset by 30px (but not below 0).
+      if (document.querySelector('.chat-composer-message-details')) {
+        offset = Math.max(0, offset - 1);
+      }
+      
+      mainEl.style.position = 'relative';
+      mainEl.style.top = offset + 'px';
+      console.log("Keyboard visible: setting #main top to", offset, "px");
+    } else {
+      // Reset the position if keyboard is not visible.
+      mainEl.style.position = '';
+      mainEl.style.top = '0px';
+      console.log("Keyboard not visible: resetting #main top to 0px");
+    }
+  }
+
+  // Create a MutationObserver to listen for changes to <html>'s class attribute.
+  var targetNode = document.documentElement;
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.attributeName === 'class') {
+        console.log("HTML class changed. New classes:", targetNode.className);
+        updateMainPosition();
+      }
+    });
+  });
+
+  observer.observe(targetNode, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+
+  // Also update when the viewport resizes (using visualViewport if available).
+  window.addEventListener('resize', updateMainPosition);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateMainPosition);
+  }
+
+  // Initial check.
+  updateMainPosition();
+})();
+
+	
+// ready domcontentload
+	document.addEventListener('DOMContentLoaded', function() {
+
+		// starting the alert for self-promo
+		  let alertShown = false; // Track whether the alert has been shown
+	
+    const waitForComposer = setInterval(() => {
+        const tagsContainer = document.querySelector(".tags-input");
+        if (tagsContainer) {
+            clearInterval(waitForComposer); // Stop checking once the composer is loaded
+
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    // Check for newly added tags
+                    const selectedTags = Array.from(document.querySelectorAll(".tags-input .formatted-selection"));
+                    if (!alertShown && selectedTags.some(tag => tag.innerText.trim() === "self-promo")) {
+                        alert("Reminder: You can only post one self-promo topic every 7 days. Please check if you've already posted 🙏");
+                        alertShown = true; // Prevent further alerts
+                    }
+                });
+            });
+
+            // Observe changes in the tags container
+            observer.observe(tagsContainer, { childList: true, subtree: true });
+        }
+    }, 100); // Check every 100ms
+
+    // Optional: Stop trying after 10 seconds to avoid infinite loop
+    setTimeout(() => clearInterval(waitForComposer), 10000);
+
+//end self-promo alert code
+		
+    // Function to safely get the value of a CSS variable
+    function getCssVariableValue(variableName) {
+        return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+    }
+
+    // Retrieve the --scheme-type variable
+    const schemeType = getCssVariableValue('--scheme-type');
+
+    // Only proceed if --scheme-type is set to 'dark' - fix Ribblr+ badges on user force dark vs prefers
+    if (schemeType === 'dark') {
+        const styleElement = document.createElement('style');
+        styleElement.type = 'text/css';
+        styleElement.innerHTML = `
+            .group--Ribblr-Plus-Gold:after, 
+            .group-Ribblr-Plus-Gold .name-username-wrapper:after, 
+            .group-Ribblr-Plus-Gold .user-profile-names__primary:after {
+                background-image: url('https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/GoldDark.png')!important;
+            }
+            
+            .group--Ribblr-Plus-Platinum:after, 
+            .group--Ribblr-Plus-Platinum .name-username-wrapper:after, 
+            .group--Ribblr-Plus-Platinum .user-profile-names__primary:after {
+                background-image: url('https://storage.googleapis.com/ribblr-disk/logos/Ribblr%2B/PlatinumDark.png')!important;
+            }
+        `;
+        document.head.appendChild(styleElement);
+    }
+});
+
+	// fixes the timeline bottom issue on mobile. Important
+document.addEventListener('click', function(event) {
+    const timeline = document.querySelector('.timeline-fullscreen');
+
+    if (timeline && event.target.closest('.timeline-fullscreen')) {
+        const observer = new MutationObserver((mutationsList) => {
+            for (let mutation of mutationsList) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    if (!timeline.classList.contains('show')) {
+                        // Trigger a click on the timeline-fullscreen div
+                        timeline.click();
+                    }
+                }
+            }
+        });
+
+        // Start observing the timeline-fullscreen div for class attribute changes
+        observer.observe(timeline, { attributes: true });
+    }
+});
+	
+function handlePostLinkClick(event) {
+  event.stopPropagation();
+}
+
+function observeShowBadgeDetails() {
+  var showBadgeDetails = document.querySelector('div.show-badge-details');
+  
+  if (showBadgeDetails) {
+    $('div.badges-granted a.post-link').click(handlePostLinkClick);
+  } else {
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        var addedNodes = mutation.addedNodes;
+        for (var i = 0; i < addedNodes.length; i++) {
+          if (addedNodes[i].classList && addedNodes[i].classList.contains('show-badge-details')) {
+            $('div.badges-granted a.post-link').click(handlePostLinkClick);
+            observer.disconnect();
+            break;
+          }
+        }
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+}
+
+observeShowBadgeDetails();
+// Custom jQuery expression for case-insensitive contains
+$.expr[':'].containsInsensitive = $.expr.createPseudo(function(arg) {
+  return function(elem) {
+    return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+  };
+});
+	
+var isIOS = navigator.userAgent.match(/(Macintosh|iPhone|iPad)/);    //if ios
+
+var devmenu = document.getElementById("dev_menu");
+var bottom_menu = document.getElementById("bottom_menu");
+	
+	
+</script>
