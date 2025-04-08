@@ -220,61 +220,38 @@
 <! -- to make a reply from link -->
 <script type="text/discourse-plugin" version="0.4">
 document.addEventListener('DOMContentLoaded', function () {
-// Debug helper to log if removal occurs.
+
+	// Function to remove links if the topic meets our condition.
   function removeLinksIfClosed() {
+    // Get the current topic model.
     const topic = Discourse.__container__.lookup('controller:topic').get('model');
+    // Locate the element that holds the title.
     const fancyTitle = document.querySelector('.fancy-title');
-    if (topic && topic.category_id === 17 && fancyTitle) {
-      console.log("Fancy title detected:", fancyTitle.textContent);
-      if (fancyTitle.textContent.toLowerCase().includes("closed")) {
-        document.querySelectorAll('.topic-body a').forEach(function(link) {
-          if (link.hasAttribute('href')) {
-            console.log("Removing href from:", link);
-            link.removeAttribute('href');
-          }
-        });
-      }
-    }
-  }
-
-  // Run removal immediately on DOMContentLoaded.
-  removeLinksIfClosed();
-
-  // Observer for the topic-body, which may change during SPA navigation.
-  let topicBodyObserver;
-  function attachTopicBodyObserver() {
-    const topicBody = document.querySelector('.topic-body');
-    if (topicBody) {
-      // Disconnect any previous observer to avoid duplicate triggers.
-      if (topicBodyObserver) topicBodyObserver.disconnect();
-      topicBodyObserver = new MutationObserver(function(mutations) {
-        // Any change in the topic body triggers removal attempt.
-        mutations.forEach(function(mutation) {
-          removeLinksIfClosed();
-        });
+    
+    // Check conditions: topic exists, category is 17, and title text includes "closed".
+    if (topic && topic.category_id === 17 && fancyTitle && fancyTitle.textContent.toLowerCase().includes("closed")) {
+      // Remove the href attribute from all anchor elements within .topic-body
+      document.querySelectorAll('.topic-body a').forEach(function(link) {
+        if (link.hasAttribute('href')) {
+          console.log("Removing href from link:", link);
+          link.removeAttribute('href');
+        }
       });
-      topicBodyObserver.observe(topicBody, { childList: true, subtree: true });
+      return true; // Condition met and links were processed.
     }
+    return false; // Condition not met yet.
   }
 
-  // Attach observer initially if .topic-body exists.
-  attachTopicBodyObserver();
-
-  // Use Discourse's event system (page:changed) to re-run our logic when page content updates.
-  // Note: In some versions of Discourse, the event is available as DiscourseEvent.on
-  function onPageChanged() {
-    // Add a delay so that all dynamic content has finished rendering.
-    setTimeout(function () {
-      removeLinksIfClosed();
-      attachTopicBodyObserver();
-    }, 300); // Adjust delay if needed (tested up to 1000ms, 300ms is a starting point)
-  }
-
-  if (typeof DiscourseEvent !== 'undefined' && DiscourseEvent.on) {
-    DiscourseEvent.on('page:changed', onPageChanged);
-  } else {
-    document.addEventListener('page:changed', onPageChanged);
-  }
+  // Poll for up to 5 seconds, checking every 500ms.
+  let attempt = 0;
+  const maxAttempts = 10; // 10 * 500ms = 5000ms or 5 seconds
+  const pollInterval = setInterval(function() {
+    attempt++;
+    if (removeLinksIfClosed() || attempt >= maxAttempts) {
+      clearInterval(pollInterval);
+      console.log("Polling stopped after " + attempt + " attempts.");
+    }
+  }, 500);
 	
 // ribbot	
     const urlParams = new URLSearchParams(window.location.search);
