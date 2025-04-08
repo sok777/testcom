@@ -261,7 +261,7 @@ function removeLinksIfClosed() {
       setTimeout(function () {
         removeLinksIfClosed();
         attachTitleObserver();
-      }, 300); // Adjust the delay as needed
+      }, 1000); // Adjust the delay as needed
     });
   } else {
     // Fallback: listen for a page:changed event on the document if DiscourseEvent isn't available
