@@ -251,7 +251,52 @@ if (titleElement) {
     characterData: true // catch changes in text nodes
   });
 }
+	function attachTitleObserver() {
+  // Try to find the fancy-title element inside a common topic container.
+  const container = document.querySelector('#main'); // or another container that persists
+  if (!container) return;
+  
+  // When a new child is added, check for .fancy-title and attach the observer there.
+  const containerObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          // If the added node or any of its children is a fancy-title, set up the observer.
+          if (node.matches && node.matches('.fancy-title') || node.querySelector('.fancy-title')) {
+            const fancyTitle = node.matches('.fancy-title') ? node : node.querySelector('.fancy-title');
+            // Attach or reattach the observer to the new fancyTitle element.
+            titleObserver.observe(fancyTitle, {
+              childList: true,
+              subtree: true,
+              characterData: true
+            });
+            // Also run the removal function in case the text is already set.
+            removeLinksIfClosed();
+          }
+        }
+      });
+    });
+  });
+  containerObserver.observe(container, { childList: true, subtree: true });
+}
+
+// Define the MutationObserver for the title changes as before.
+const titleObserver = new MutationObserver(removeLinksIfClosed);
+
+// Initial attachment
+const initialTitle = document.querySelector('.fancy-title');
+if (initialTitle) {
+  titleObserver.observe(initialTitle, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+}
+
+// Also attach the observer on the parent container
+attachTitleObserver();
 	
+// ribbot	
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has('payload')) {
