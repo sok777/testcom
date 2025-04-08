@@ -219,7 +219,7 @@
 
 <! -- to make a reply from link -->
 <script type="text/discourse-plugin" version="0.4">
-  $(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 
 	// remove links from closed tester calls.
 	function removeLinksIfClosed() {
@@ -229,10 +229,12 @@
     // Check if we are in category ID 17
     if (topic && topic.category_id === 17) {
       // Check if the .fancy-title contains the word "closed" (case-insensitive)
-      if ($('.fancy-title').text().toLowerCase().includes("closed")) {
-        // Remove href attribute from all links within .topic-body
-        $('.topic-body a').removeAttr('href');
-      }
+      const fancyTitle = document.querySelector('.fancy-title');
+	if (fancyTitle && fancyTitle.textContent.toLowerCase().includes("closed")) {
+	  document.querySelectorAll('.topic-body a').forEach(function(link) {
+	    link.removeAttribute('href');
+	  });
+	}
     }
   }
 
@@ -264,38 +266,44 @@
 
         // Only run timeouts when the window has fully loaded (after page is fully loaded)
 		if(draftText) {
-			$(window).on('load', function () {
+			window.addEventListener('load', function () {
 			  setTimeout(function () {
-				const topic = Discourse.__container__.lookup("controller:topic").get("model");
-				if (topic) {
-				  composer.open({
-					action: REPLY,
-					draftKey: topic.draft_key,
-					draftSequence: topic.draft_sequence,
-					topic,
-					topicBody: draftText
-				  });
-				}
+			    const topic = Discourse.__container__.lookup("controller:topic").get("model");
+			    if (topic) {
+			      composer.open({
+			        action: REPLY,
+			        draftKey: topic.draft_key,
+			        draftSequence: topic.draft_sequence,
+			        topic,
+			        topicBody: draftText
+			      });
+			    }
 			  }, 0);
-
+			
 			  setTimeout(function () {
-				composer.save();
+			    composer.save();
 			  }, 1000);
 			});
 		}
 
         if (token) {
-          $.ajax({
-            url: "https://ribblr.com/ribbot_postcard",
-            method: "POST",
-            async: true,
-            data: {
-              token: token,
-              community_username: Discourse.User.currentProp('username'),
-              user_id: Discourse.User.currentProp('external_id'),
-              user_community_id: Discourse.User.currentProp('id'),
-            },
-          });
+          const data = new URLSearchParams({
+		  token: token,
+		  community_username: Discourse.User.currentProp('username'),
+		  user_id: Discourse.User.currentProp('external_id'),
+		  user_community_id: Discourse.User.currentProp('id'),
+		});
+		
+		fetch("https://ribblr.com/ribbot_postcard", {
+		  method: "POST",
+		  headers: {
+		    "Content-Type": "application/x-www-form-urlencoded"
+		  },
+		  body: data.toString()
+		})
+		.catch(function(err) {
+		  console.error("Error in fetch:", err);
+		});
         }
 
       } catch (error) {
@@ -645,7 +653,9 @@ function observeShowBadgeDetails() {
   var showBadgeDetails = document.querySelector('div.show-badge-details');
   
   if (showBadgeDetails) {
-    $('div.badges-granted a.post-link').click(handlePostLinkClick);
+    document.querySelectorAll('div.badges-granted a.post-link').forEach(function(link) {
+	  link.addEventListener('click', handlePostLinkClick);
+	});
   } else {
     var observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
@@ -665,12 +675,9 @@ function observeShowBadgeDetails() {
 }
 
 observeShowBadgeDetails();
-// Custom jQuery expression for case-insensitive contains
-$.expr[':'].containsInsensitive = $.expr.createPseudo(function(arg) {
-  return function(elem) {
-    return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-  };
-});
+function containsInsensitive(element, searchText) {
+  return element.textContent.toUpperCase().includes(searchText.toUpperCase());
+}
 	
 var isIOS = navigator.userAgent.match(/(Macintosh|iPhone|iPad)/);    //if ios
 
