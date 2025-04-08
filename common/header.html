@@ -220,28 +220,56 @@
 <! -- to make a reply from link -->
 <script type="text/discourse-plugin" version="0.4">
 document.addEventListener('DOMContentLoaded', function () {
-
-	 function removeLinksIfClosed() {
+function removeLinksIfClosed() {
     const topic = Discourse.__container__.lookup('controller:topic').get('model');
     const fancyTitle = document.querySelector('.fancy-title');
-    if (topic && topic.category_id === 17 && fancyTitle && fancyTitle.textContent.toLowerCase().includes("closed")) {
+    if (topic && topic.category_id === 17 && fancyTitle &&
+        fancyTitle.textContent.toLowerCase().includes("closed")) {
       document.querySelectorAll('.topic-body a').forEach(function(link) {
         link.removeAttribute('href');
       });
     }
   }
-  
-  // Run it immediately
+
+  // Run on initial load
   removeLinksIfClosed();
 
+  // Declare our MutationObserver variable in a scope so we can reuse it
   let titleObserver;
-  const initialTitle = document.querySelector('.fancy-title');
-  if (initialTitle) {
-    titleObserver = new MutationObserver(removeLinksIfClosed);
-    titleObserver.observe(initialTitle, {
-      childList: true,
-      subtree: true,
-      characterData: true
+
+  // Function to attach a MutationObserver to .fancy-title
+  function attachTitleObserver() {
+    const newFancyTitle = document.querySelector('.fancy-title');
+    if (newFancyTitle) {
+      // Disconnect existing observer if there is one
+      if (titleObserver) {
+        titleObserver.disconnect();
+      }
+      titleObserver = new MutationObserver(removeLinksIfClosed);
+      titleObserver.observe(newFancyTitle, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+    }
+  }
+
+  // Use Discourse’s event system if available.
+  if (typeof DiscourseEvent !== 'undefined' && DiscourseEvent.on) {
+    DiscourseEvent.on('page:changed', function () {
+      // Delay execution so the new topic DOM is fully loaded
+      setTimeout(function () {
+        removeLinksIfClosed();
+        attachTitleObserver();
+      }, 300); // Adjust the delay as needed
+    });
+  } else {
+    // Fallback: listen for a page:changed event on the document if DiscourseEvent isn't available
+    document.addEventListener('page:changed', function () {
+      setTimeout(function () {
+        removeLinksIfClosed();
+        attachTitleObserver();
+      }, 300);
     });
   }
 	
