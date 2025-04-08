@@ -220,79 +220,50 @@
 <! -- to make a reply from link -->
 <script type="text/discourse-plugin" version="0.4">
 document.addEventListener('DOMContentLoaded', function () {
- // Helper: Check if the current topic is in category 17 and its title contains "closed"
-  function isTopicClosed() {
+function isTopicClosed() {
     const topic = Discourse.__container__.lookup('controller:topic').get('model');
     const fancyTitle = document.querySelector('.fancy-title');
-    if (topic && fancyTitle) {
-      // If category_id might be a number or a string, use loose comparison or convert it:
-      return parseInt(topic.category_id, 10) === 17 && fancyTitle.textContent.toLowerCase().includes("closed");
-    }
-    return false;
+    return topic &&
+           parseInt(topic.category_id, 10) === 17 &&
+           fancyTitle &&
+           fancyTitle.textContent.toLowerCase().includes("closed");
   }
-
-  // Helper: Remove the href attribute from all anchor tags in .topic-body
-  function removeHrefFromLinks() {
-    document.querySelectorAll('.topic-body a').forEach(function(link) {
-      if (link.hasAttribute('href')) {
-        console.log("Removing href from:", link);
+  
+  // Function to remove href attributes from all <a> inside .topic-body if condition is met
+  function removeHrefIfNeeded() {
+    if (isTopicClosed()) {
+      document.querySelectorAll('.topic-body a[href]').forEach(function(link) {
+        // For debugging: log the link being modified.
+        console.log("Removing href from link:", link);
         link.removeAttribute('href');
-      }
-    });
-  }
-
-  // Initial check on DOMContentLoaded
-  if (isTopicClosed()) {
-    removeHrefFromLinks();
-  }
-
-  // Observer 1: Watch for attribute changes on anchor tags within .topic-body
-  const topicBody = document.querySelector('.topic-body');
-  if (topicBody) {
-    const attrObserver = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
-          if (isTopicClosed()) {
-            console.log("Attribute change detected. Removing href from:", mutation.target);
-            mutation.target.removeAttribute('href');
-          }
-        }
       });
-    });
-    attrObserver.observe(topicBody, { attributes: true, subtree: true, attributeFilter: ["href"] });
+    }
   }
-
-  // Observer 2: Watch for added nodes in .topic-body
-  if (topicBody) {
-    const childObserver = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        if (mutation.type === 'childList' && mutation.addedNodes.length) {
-          if (isTopicClosed()) {
-            console.log("Child nodes added, checking for links...");
-            removeHrefFromLinks();
-          }
-        }
-      });
-    });
-    childObserver.observe(topicBody, { childList: true, subtree: true });
-  }
-
-  // Listen for Discourse's page change events (if available)
-  // This event is fired when the page content updates in a SPA environment.
-  function onPageChanged() {
-    // Use a slight delay to ensure content has fully loaded.
-    setTimeout(function () {
-      if (isTopicClosed()) {
-        removeHrefFromLinks();
-      }
-    }, 500);
-  }
-
-  if (typeof DiscourseEvent !== 'undefined' && typeof DiscourseEvent.on === 'function') {
-    DiscourseEvent.on('page:changed', onPageChanged);
-  } else {
-    document.addEventListener('page:changed', onPageChanged);
-  }
+  
+  // Run immediately on DOMContentLoaded in case the content is already rendered.
+  removeHrefIfNeeded();
+  
+  // Set up a persistent observer on document.body so that
+  // if Discourse re‑renders content or adds new nodes, we catch them.
+  const bodyObserver = new MutationObserver(function(mutations) {
+    // Every time there are mutations (child additions or attribute changes),
+    // re-run our check.
+    removeHrefIfNeeded();
+  });
+  
+  // Observe most of the DOM in case content is added late.
+  bodyObserver.observe(document.body, { 
+    childList: true, 
+    subtree: true, 
+    attributes: true, 
+    attributeFilter: ['href']  // watch for changes to href attributes
+  });
+  
+  // Optionally, disconnect the observer after 30 seconds (adjust if needed)
+  setTimeout(function() {
+    bodyObserver.disconnect();
+    console.log("Persistent observer disconnected after 30 seconds.");
+  }, 30000);
 	
 // ribbot	
     const urlParams = new URLSearchParams(window.location.search);
